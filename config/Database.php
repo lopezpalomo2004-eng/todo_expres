@@ -2,28 +2,39 @@
 
 class Database
 {
-    private $host = "localhost";
-    private $port = "3306";
-    private $db_name = "todo_expres";
-    private $username = "root";
-    private $password = "";
+    private $host;
+    private $port;
+    private $dbName;
+    private $user;
+    private $pwd;
+    private $connection;
+
+    public function __construct()
+    {
+        $env = parse_ini_file(__DIR__ . "/../.env");
+
+        $this->host = $env["DB_HOST"];
+        $this->port = $env["DB_PORT"];
+        $this->dbName = $env["DB_NAME"];
+        $this->user = $env["DB_USER"];
+        $this->pwd = $env["DB_PWD"];
+    }
 
     public function conectar()
     {
-        try {
-            $conexion = new PDO(
-                "mysql:host=" . $this->host . ";port=" . $this->port . ";dbname=" . $this->db_name,
-                $this->username,
-                $this->password
-            );
+        $dsn = "mysql:host={$this->host};port={$this->port};dbname={$this->dbName}";
 
-            $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $this->connection = new PDO(
+            $dsn,
+            $this->user,
+            $this->pwd
+        );
 
-            return $conexion;
+        $this->connection->setAttribute(
+            PDO::ATTR_ERRMODE,
+            PDO::ERRMODE_EXCEPTION
+        );
 
-        } catch (PDOException $e) {
-            echo "Error de conexión: " . $e->getMessage();
-            return null;
-        }
+        return $this->connection;
     }
 }
