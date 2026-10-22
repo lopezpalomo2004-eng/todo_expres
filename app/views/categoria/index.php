@@ -21,6 +21,5 @@
 
 <?php } else { ?>
 
-    <p>No hay categorías disponibles.</p>
 
 <?php } ?>
